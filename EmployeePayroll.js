@@ -65,8 +65,3 @@ salary.addEventListener('input',function(){
     output.textContent = salary.value;
 });
 }
-
-// function save(){
-//     let name = document.getElementById(name).value;
-//     let gender = document.getElementById(gender).value;
-// }
