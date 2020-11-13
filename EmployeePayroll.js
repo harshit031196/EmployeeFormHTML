@@ -48,7 +48,12 @@ class EmployeePayrollData{
         return this._startDate;
     }
     set startDate(startDate){
-        this._startDate = startDate
+        if(startDate.getTime()<=new Date().getTime()&&((new Date().getTime()-startDate.getTime())/(86400000))<=30 ){
+            this._startDate = startDate;
+           }
+        else{
+            throw "Date is incorrect: "
+        }
     }
     toString(){
         const options = { year: 'numeric',month: 'long',day: 'numeric',weekday:'long'}
@@ -57,16 +62,34 @@ class EmployeePayrollData{
     }
 
 }
-function updateSalary(){
-const salary = document.querySelector('#salary')
-const output = document.querySelector('.salary-output')
-output.textContent = salary.value;
-salary.addEventListener('input',function(){
-    output.textContent = salary.value;
-});
-}
 
-// function save(){
-//     let name = document.getElementById(name).value;
-//     let gender = document.getElementById(gender).value;
-// }
+window.addEventListener('DOMContentLoaded',(event)=>{
+    const name = document.querySelector('#name');
+    const textError = document.querySelector('.text-error')
+    name.addEventListener('input',function () {
+            if (name.value.length == 0) {
+                textError.textContent = "";
+                return;
+            }
+            try {
+                (new EmployeePayrollData()).name = name.value;
+                textError.textContent = "";
+            } catch (e) {
+                textError.textContent = e;
+            }
+        });
+    startDate.addEventListener('input',function(){
+        try {
+            (new EmployeePayrollData()).startDate = startDate.value;
+            textError.textContent = "";
+        } catch (e) {
+            textError.textContent = e;
+        }
+    });
+    const salary = document.querySelector('#salary')
+    const output = document.querySelector('.salary-output')
+    output.textContent = salary.value;
+    salary.addEventListener('input',function(){
+        output.textContent = salary.value;
+    });
+});
