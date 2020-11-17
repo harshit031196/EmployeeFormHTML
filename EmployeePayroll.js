@@ -48,11 +48,13 @@ class EmployeePayrollData{
         return this._startDate;
     }
     set startDate(startDate){
-        if(startDate.getTime()<=new Date().getTime()&&((new Date().getTime()-startDate.getTime())/(86400000))<=30 ){
-            this._startDate = startDate;
-           }
-        else{
-            throw "Date is incorrect: "
+        if(startDate.getTime()<=new Date().getTime()){
+            if(((new Date().getTime()-startDate.getTime())/(86400000))<=30){
+                this._startDate = startDate;
+            }
+            else{
+                throw "Date is incorrect: "
+            }
         }
     }
     toString(){
@@ -63,37 +65,49 @@ class EmployeePayrollData{
 
 }
 
-window.addEventListener('DOMContentLoaded',(event)=>{
-    const name = document.querySelector('#name');
-    const textError = document.querySelector('.text-error')
-    name.addEventListener('input',function () {
-            if (name.value.length == 0) {
-                textError.textContent = "";
-                return;
-            }
+window.addEventListener("DOMContentLoaded", () => {
+
+    const name = document.querySelector("#name");
+    const nameError = document.querySelector(".name-error");
+    const validName = document.querySelector(".valid-name");
+    name.addEventListener("input", function() {
+        if (name.value.length == 0) {
+            nameError.textContent = "";
+            validName.textContent = "";
+        } else {
             try {
-                (new EmployeePayrollData()).name = name.value;
-                textError.textContent = "";
-            } catch (e) {
-                textError.textContent = e;
+                (new EmployeePayrollData).name = name.value;
+                nameError.textContent = "";
+                validName.textContent = '✓';
+                document.querySelector(".submitButton").disabled = false;
+            } catch (error) {
+                nameError.textContent = error;
+                validName.textContent = "";
+                document.querySelector(".submitButton").disabled = true;
             }
-        });
-    // startDate.addEventListener('input',function(){
-    //     if (startDate.value.length == 0) {
-    //         textError.textContent = "";
-    //         return;
-    //     }
-    //     try {
-    //         (new EmployeePayrollData()).startDate = startDate.value;
-    //         textError.textContent = "";
-    //     } catch (e) {
-    //         textError.textContent = e;
-    //     }
-    // });
-    const salary = document.querySelector('#salary')
-    const output = document.querySelector('.salary-output')
-    output.textContent = salary.value;
-    salary.addEventListener('input',function(){
-        output.textContent = salary.value;
+        }
     });
+
+    const startDate = document.querySelector("#startDate");
+    const startDateError = document.querySelector(".startDate-error");
+    const validStartDate = document.querySelector(".valid-startDate");
+    startDate.addEventListener("input", function() {
+        try {
+            let dateString = document.querySelector("#month").value + " " + document.querySelector("#day").value + ", " + document.querySelector("#year").value;
+            (new EmployeePayrollData).startDate = new Date(dateString);
+            startDateError.textContent = "";
+            validStartDate.textContent = '✓';
+            document.querySelector(".submitButton").disabled = false;
+        } catch (error) {
+            startDateError.textContent = error;
+            validStartDate.textContent = "";
+            document.querySelector(".submitButton").disabled = true;
+        }
+    });
+
+    const salary = document.querySelector("#salary");
+    const output = document.querySelector(".salary-output");
+    salary.oninput = function() {
+        output.textContent = salary.value;
+    };
 });
